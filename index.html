@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday, Mom!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+      background-image: url('https://images.unsplash.com/photo-1617089268741-035d1a43fad9?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      color: #d63384;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin: 20px 0 10px;
+      text-shadow: 2px 2px 6px rgba(255,255,255,0.8);
+    }
+
+    .message-box {
+      margin: 10px auto;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255, 240, 250, 0.85);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 80%;
+      max-width: 500px;
+      display: none;
+      animation: fadeIn 1s ease-in-out;
+      color: #d63384;
+      text-shadow: none;
+    }
+
+    .message-box img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .flower-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .flower {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin-bottom: 10px auto;
+    }
+
+    .petal {
+      width: 100px;
+      height: 120px;
+      background: radial-gradient(circle, #ff99c8, #ff4da6);
+      border-radius: 50% 50% 0 0;
+      position: absolute;
+      transform-origin: bottom center;
+      cursor: pointer;
+      transition: transform 1s ease, opacity 1s ease;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .center {
+      width: 130px;
+      height: 130px;
+      background: gold;
+      border-radius: 50%;
+      position: absolute;
+      top: 120px;
+      left: 60px;
+      z-index: 2;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+    }
+
+    /* Place petals in a perfect circle */
+    .petal:nth-child(1) { transform: rotate(0deg) translateY(-110px); left: 75px; top: 148px; }
+    .petal:nth-child(2) { transform: rotate(72deg) translateY(-110px); left: 0.5px; top: 95px; }
+    .petal:nth-child(3) { transform: rotate(144deg) translateY(-110px); left: 35px; top: 5px; }
+    .petal:nth-child(4) { transform: rotate(216deg) translateY(-110px); left: 115px; top: 5px; }
+    .petal:nth-child(5) { transform: rotate(288deg) translateY(-110px); left: 145px; top: 95px; }
+
+    .falling {
+      transform: translateY(600px) rotate(360deg) !important;
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    .stem {
+      width: 15px;
+      height: 120px;
+      background: #4CAF50;
+      border-radius: 10px;
+      box-shadow: 0 0 8px #6edc6e;
+      margin: 0 auto;
+    }
+
+    .final-message {
+      font-size: 2.5em;
+      color: #ff4da6;
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 2s ease-in-out;
+      text-shadow: 2px 2px 5px rgba(255,255,255,0.8);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Presiona cada petalo 🌸</h1>
+
+  <div class="message-box" id="messageBox"></div>
+
+  <div class="flower-container">
+    <div class="flower">
+      <div class="petal" onclick="fallPetal(0)"></div>
+      <div class="petal" onclick="fallPetal(1)"></div>
+      <div class="petal" onclick="fallPetal(2)"></div>
+      <div class="petal" onclick="fallPetal(3)"></div>
+      <div class="petal" onclick="fallPetal(4)"></div>
+      <div class="center"></div>
+    </div>
+    <div class="stem"></div>
+  </div>
+
+  <div class="final-message" id="finalMsg">🎉 Feliz Cumpleaños, Mama! 🎉</div>
+
+  <script>
+    const messages = [
+      {
+        text: "💖 Te amamos, Mama!",
+        image: "us.jpg"
+      },
+      {
+        text: "🌷 Eres nuestro rallo de luz que nos mantiene a todos unidos.",
+        image: ""
+      },
+      {
+        text: "💐 Haces todo brillar y alegre, gracias por siempre estar ahí!.",
+        image: "usi.jpg"
+      },
+      {
+        text: "🌼 Tu felicidad es nuestra felicidad.",
+        image: ""
+      },
+      {
+        text: "🎁 Eres el mejor regalo de todos!.",
+        image: "usik.jpg"
+      }
+    ];
+
+    let petalsClicked = 0;
+
+    function fallPetal(index) {
+      const petals = document.querySelectorAll('.petal');
+      const messageBox = document.getElementById('messageBox');
+      const finalMsg = document.getElementById('finalMsg');
+
+      if (!petals[index].classList.contains('falling')) {
+        petals[index].classList.add('falling');
+        petalsClicked++;
+
+        const msg = messages[index];
+        messageBox.innerHTML = `
+          ${msg.image ? `<img src="${msg.image}" alt="photo">` : ""}
+          <p>${msg.text}</p>
+        `;
+        messageBox.style.display = "block";
+
+        if (petalsClicked === messages.length) {
+          setTimeout(() => {
+            messageBox.style.display = "none";
+            finalMsg.style.display = "block";
+          }, 2000);
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
